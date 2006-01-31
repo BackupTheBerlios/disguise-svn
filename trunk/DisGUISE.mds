@@ -1,0 +1,16 @@
+<Combine name="DisGUISE" fileversion="2.0" outputpath="./build/bin">
+  <Configurations active="Release">
+    <Configuration name="Debug" ctype="CombineConfiguration">
+      <Entry configuration="Debug" build="True" name="DisGUISE" />
+    </Configuration>
+    <Configuration name="Release" ctype="CombineConfiguration">
+      <Entry configuration="Debug" build="True" name="DisGUISE" />
+    </Configuration>
+  </Configurations>
+  <StartMode startupentry="GUIdanSE" single="True">
+    <Execute type="None" entry="DisGUISE" />
+  </StartMode>
+  <Entries>
+    <Entry filename="./DisGUISE.mdp" />
+  </Entries>
+</Combine>

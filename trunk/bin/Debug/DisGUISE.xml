@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>/home/stefan/monodevelop/DisGUISE/bin/Debug/DisGUISE</name>
+    </assembly>
+    <members>
+        <member name="T:DisGUISE.Backend.IPhonePort">
+            The IPhonePort interface defines the methods for communication with the phone device</member>
+        <member name="M:DisGUISE.Backend.IPhonePort.AddCommand(DisGUISE.Backend.ATCommand)">
+            This method adds a new command to the command queue, and will return the answer strings
+            of the phone once the command is executed</member>
+        <member name="M:DisGUISE.Backend.IPhonePort.Stop">
+            Terminate to the connection to the phone and stop processing further events and commands</member>
+    </members>
+</doc>
