@@ -16,8 +16,8 @@ namespace DisGUISE.Phone
         // this has to be fine tuned
         private static Regex reCALL = new Regex("^\\*ECAV: ([0-9]+),([0-9]+),([0-9]+)(?:,([0-9]*))?(?:,([0-9]*))?(?:,\"([0-9]*)\",(145|129))?$");
 
-        public CallEventHandler OnPhoneCall;
-
+        public event CallEventHandler OnPhoneCall;
+        
         public CallEventReporter(IPhonePort port):base(port, true)
         {
             calls = new Hashtable();
