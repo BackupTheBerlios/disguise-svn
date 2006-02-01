@@ -7,11 +7,12 @@ using System.Runtime.InteropServices;
 
 namespace DisGUISE.Backend
 {
-    /* Devstream is a fix for the FileStream class for use with character devices:
-       Since seeking inside the file is impossible, but the StreamWriter tries to do this
-       because of FileStream not detecting this disability, this class sets the CanSeek property
-       to false.
-     */
+    /// <summary>
+    /// Devstream is a fix for the FileStream class for use with character devices:
+    /// Since seeking inside the file is impossible, but the StreamWriter tries to do this
+    /// because of FileStream not detecting this disability, this class sets the CanSeek property
+    /// to false.
+    /// </summary>
     internal class DevStream:FileStream
     {
         public DevStream(String filename, FileAccess access):base(filename, FileMode.Open, access)

@@ -10,15 +10,17 @@ using DisGUISE.SEWidgets;
 
 namespace DisGUISE.Backend
 {
-    /* This class ensures that every raw event received from the phone
-       is propagated in its own thread, since passing the messages without
-       threading could lead to deadlocks if new commands are issued from inside
-       an event handler.
-     */
+    /// <summary>This class ensures that every raw event received from the phone
+    /// is propagated in its own thread, since passing the messages without
+    /// threading could lead to deadlocks if new commands are issued from inside
+    /// an event handler.</summary>
     internal class RawEventPropagator
     {
         private RawEventHandler handler;
         private RawEventArgs e;
+        ///<summary>Instantiate a new propagator to carry the event to a handler.</summary>
+        ///<param name="handler">The receiver the event should be delivered to</param>
+        ///<param name="e">The arguments to the occuring event</param>
         public RawEventPropagator(RawEventHandler handler, RawEventArgs e)
         {
             this.handler = handler;
@@ -26,7 +28,7 @@ namespace DisGUISE.Backend
 
             ThreadStart threadDelegate = new ThreadStart(this.Run);
             Thread newThread = new Thread(threadDelegate);
-              newThread.Start();
+            newThread.Start();
         }
 
         public void Run()
@@ -35,10 +37,11 @@ namespace DisGUISE.Backend
         }
     }
 
-    /* The DeviceFilePort object handles all communication with the phone. It does encapsulate
-       the bluetooth connection via the RFCOMM API, and keeps track of issued commands and their
-       responses
-     */
+    /// <summary>
+    /// The DeviceFilePort object handles all communication with the phone. It does encapsulate
+    /// the bluetooth connection via the RFCOMM API, and keeps track of issued commands and their
+    /// responses.
+    /// </summary>
     public class DeviceFilePort:IPhonePort
     {
         private String filename;
@@ -50,11 +53,16 @@ namespace DisGUISE.Backend
         private Thread readThread;
         private Queue commands;
 
-        // Time unttil a new command is sent
+        // Time until a new command is sent
         private static int sleepTime = 100;
-
+        
+        /// <event>This event is triggered everytime a unsolicitated result line is received from the phone</event>
         public event RawEventHandler OnRawEvent;
-
+        
+        /// <summary>
+        /// Create a new port object and access the phone via the supplied device file.
+        /// </summary>
+        /// <param name="filename">The path to the RFCOMM device which is connected to the phone.</param>
         public DeviceFilePort(String filename):base()
         {
             this.filename = filename;
@@ -65,7 +73,8 @@ namespace DisGUISE.Backend
             reading = false;
             commands = new Queue();
         }
-
+        
+        /// <summary>Start reading from the port.</summary>
         public void Start()
         {
             // Launch the reader thread
@@ -74,17 +83,14 @@ namespace DisGUISE.Backend
             readThread.Start();
 
             // Try to bring the phone interface into a clean state
-            String r = this.AddCommand(new ATCommand("AT&F"));
-            r.Equals("");       // Just to suppress the compiler warning
-            //Console.WriteLine("»»" + r + "««");
+            this.AddCommand(new ATCommand("AT&F"));
             // Strange things can happen if we have echos enabled:
             // This might be a bug in the program, but maybe also in the phone
             // (since minicom sometimes shows similar symptoms)
-            String r2 = this.AddCommand(new ATCommand("ATE=0"));
-            r2.Equals("");      // Just to suppress the compiler warning
-            //Console.WriteLine("»»" + r2 + "««");
+            this.AddCommand(new ATCommand("ATE=0"));
         }
-
+        
+        /// <summary>Stop reading from the port.</summary>
         public void Stop()
         {
             // SEWidget.cleanUp();
@@ -105,11 +111,11 @@ namespace DisGUISE.Backend
             readThread.Join();
         }
 
-        /* This method will run in a thread and continously wait for incoming data
-         */
+        /// <summary>This method will run in a thread and continously wait for incoming data.</summary>
         private void ReadPort()
         {
             sr.DiscardBufferedData();
+            // Are we still supposed to read?
             while (reading) {
                 sr.BaseStream.Flush();
                 // Retrieve the next line from the phone
@@ -131,8 +137,7 @@ namespace DisGUISE.Backend
             }
         }
 
-        /* This method takes care of received lines
-         */
+        /// <summary>This method takes care of received lines</summary>
         private void ProcessLine(String line)
         {
             // If there is a command being processed, the incoming line
@@ -164,9 +169,11 @@ namespace DisGUISE.Backend
             }
         }
 
-        /* This method gets called once a command is finished, either closed by OK or ERROR
-         * Depending on this, the success parameter will be set accordingly.
-         */
+        /// <summary>
+        /// This method gets called once a command is finished, either closed by OK or ERROR
+        /// Depending on this, the success parameter will be set accordingly.
+        /// </summary>
+        /// <param name="success">Indicated whether the command terminated with success/OK (true) or failure/ERROR (false)</param>
         private void CommandFinished(bool success)
         {
             ATCommand active = (ATCommand) commands.Peek();
@@ -180,7 +187,13 @@ namespace DisGUISE.Backend
             // and process the next one
             TransmitNextCommmand();
         }
-
+        
+        /// <summary>
+        /// Add a new command to the queue. This method will block until the command is transmitted
+        /// and completely processed by the phone. 
+        /// </summary>
+        /// <param name="cmd">The command you would like to transmit</param>
+        /// <returns>The result string received from the phone in response to the command</returns>
         public String AddCommand(ATCommand cmd)
         {
             // place the new command into the queue
@@ -194,10 +207,11 @@ namespace DisGUISE.Backend
             return result;
         }
 
-        /* This method transmits the next command in queue to the phone. Before this, it checks whether
-           there is already a command in progress - In this case, calling this method is safe and has no
-           effect
-         */
+        /// <summary>
+        /// This method transmits the next command in queue to the phone. Before this, it checks whether
+        /// there is already a command in progress - In this case, calling this method is safe and has no
+        /// effect
+        /// </summary>
         private void TransmitNextCommmand()
         {
             // Are there any commands in queue?
