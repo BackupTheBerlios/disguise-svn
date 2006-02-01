@@ -1,5 +1,5 @@
 <Project name="DisGUISE" fileversion="2.0" Description="The DisGUISE library provides an easy and object oriented access to the features of the AT command interface available in Sony Ericsson cellphones. This includes basic tasks like getting a notice on incoming calls, but also handling GUI elements. The phone, connected to the computer via bluetooth, thus can become an additional user interface device." language="C#" ctype="DotNetProject">
-  <Configurations active="Debug">
+  <Configurations active="Release">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="./bin/Debug" assembly="DisGUISE" />
       <Build debugmode="True" target="Library" />
@@ -9,7 +9,7 @@
     <Configuration name="Release" ctype="DotNetProjectConfiguration">
       <Output directory="./bin/Release" assembly="DisGUISE" />
       <Build debugmode="False" target="Library" />
-      <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" />
+      <Execution runwithwarnings="False" consolepause="True" runtime="MsNet" />
       <CodeGeneration compiler="Csc" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" mainclass="" generatexmldocumentation="True" ctype="CSharpCompilerParameters" />
     </Configuration>
   </Configurations>

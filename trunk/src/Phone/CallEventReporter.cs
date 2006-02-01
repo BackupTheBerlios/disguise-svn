@@ -10,14 +10,22 @@ using DisGUISE.Phone.Events;
 
 namespace DisGUISE.Phone
 {
+    /// <summary>
+    /// This object, once instantiated, skims through the incoming events and filters out those
+    /// which are related to call activity, either incoming or outgoing. It also keeps track of those
+    /// and gathers data about the active phone calls, distributing this information to other objects
+    /// listening for its events.
+    /// </summary>
     public class CallEventReporter:EventReporter
     {
         private Hashtable calls;
         // this has to be fine tuned
         private static Regex reCALL = new Regex("^\\*ECAV: ([0-9]+),([0-9]+),([0-9]+)(?:,([0-9]*))?(?:,([0-9]*))?(?:,\"([0-9]*)\",(145|129))?$");
-
+        
+        /// <summary>This event gets fired everytime call related activity occurs.</summary>
         public event CallEventHandler OnPhoneCall;
         
+        /// <summary>Instantiate a new instance of this class.</summary>
         public CallEventReporter(IPhonePort port):base(port, true)
         {
             calls = new Hashtable();
@@ -69,12 +77,14 @@ namespace DisGUISE.Phone
             }
         }
     }
+    
     namespace Events
     {
         public class CallEventArgs:EventArgs
         {
             private Call _callinfo;
-
+            
+            /// <value>The <c>Call</c> object the event is related to.</value>
             public Call Callinfo
             {
                 get

@@ -10,10 +10,12 @@ using DisGUISE.SEWidgets;
 
 namespace DisGUISE.Backend
 {
-    /// <summary>This class ensures that every raw event received from the phone
+    /// <summary>
+    /// This class ensures that every raw event received from the phone
     /// is propagated in its own thread, since passing the messages without
     /// threading could lead to deadlocks if new commands are issued from inside
-    /// an event handler.</summary>
+    /// an event handler.
+    /// </summary>
     internal class RawEventPropagator
     {
         private RawEventHandler handler;

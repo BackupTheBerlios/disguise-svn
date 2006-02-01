@@ -27,7 +27,7 @@ namespace DisGUISE.Backend
 
         // The lock object, which is internally used to wait for the incoming data
         private Object locker = "";
-        
+
         /// <summary>Instantiates an instance of the class with the supplied specific command string.</summary>
         /// <param name="cmd">The AT command that should be sent to the phone</param>
         public ATCommand(String cmd)
@@ -35,7 +35,7 @@ namespace DisGUISE.Backend
             this.cmd = cmd;
             this.transmitted = false;
         }
-        
+
         /// <value>Indicates whether the command has been transmitted to the phone.</value>
         /// <remarks>While reading this property is harmless, write access should be restricted to the IPhonePort object!</remarks>
         public bool Transmitted
@@ -49,7 +49,7 @@ namespace DisGUISE.Backend
                 this.transmitted = value;
             }
         }
-        
+
         /// <value>The command string the object was instantiated with</value>
         public String Command
         {
@@ -84,7 +84,7 @@ namespace DisGUISE.Backend
         {
             result = result + line + "\n";
         }
-        
+
         /// <summary>
         /// Retrieves the result string from the object. To ensure that the data is complete,
         /// this method should be called after Ready() released WaitForResult() released the lock.

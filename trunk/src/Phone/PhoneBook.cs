@@ -8,19 +8,24 @@ using DisGUISE.Backend;
 
 namespace DisGUISE.Phone
 {
-    // This class represents a single entry in the phone book
+    /// <summary>
+    /// This class represents a single entry in the phone book.
+    /// </summary>
     public class PhoneBookEntry
     {
         private String name;
         private String number;
 
-
+        /// <summary>Instantiate a new entry.</summary>
+        /// <param name="name">The name of the contact.</param>
+        /// <param name="number">The phone number of the contact.</param>
         public PhoneBookEntry(String name, String number)
         {
             this.name = name;
             this.number = number;
         }
-
+        
+        /// <value>The name contained in the entry.</value>
         public String Name
         {
             get
@@ -28,6 +33,8 @@ namespace DisGUISE.Phone
                 return name;
             }
         }
+        
+        /// <value>The phone number contained in the entry.</value>
         public String Number
         {
             get
@@ -37,11 +44,14 @@ namespace DisGUISE.Phone
         }
     }
 
-    /* This class provides a simple way of accessing the phone book of the cellphone
-       Due to a strange bug in the behaviour of the phone, the queries cannot be performed "live"
-       in a reliable way (call activity disrupts the retrievel of phone book entries), so the book has to be
-       refreshed in regular periods in order to keep the cached information on a recent level. 
-     */
+    /// <summary>
+    /// <para>This class provides a simple way of accessing the phone book of the cellphone.</para>
+    /// <para>
+    /// Due to a strange bug in the behaviour of the phone, the queries cannot be performed "live"
+    /// in a reliable way (call activity disrupts the retrievel of phone book entries), so the book has to be
+    /// refreshed in regular periods in order to keep the cached information on a recent level.
+    /// </para>
+    /// </summary>
     public class PhoneBook:PhoneInteractor
     {
         // With this regular expression we determine the maximal number of entries
@@ -58,7 +68,11 @@ namespace DisGUISE.Phone
         // Sadly, receiving a call event while looking up the phonebook seriously disrupts the transfer, often several entries are missing
         // Therefore, we implement caching to avoid such lookups during incoming or outgoing calls
         private Hashtable cache;
-
+        
+        /// <summary>
+        /// <para>Create a new instance of this class, and connect it to the supplied phone port.</para>
+        /// <para>After initialization, the phone book is retrieved from the phone and cached.</para>
+        /// </summary>
         public PhoneBook(IPhonePort port):base(port)
         {
             // init the cache
@@ -66,13 +80,15 @@ namespace DisGUISE.Phone
             Refresh();
         }
 
-        // Retrieve a fresh copy of the phone book
+        /// <summary>Retrieve a fresh copy of the phone book and store it inside the cache.</summary>
         public void Refresh()
         {
             cache = GetBook();
         }
 
-        // Query the cache by number (which is actually a string, due to "+")
+        /// <summary>Query the cache by phone number.</summary>
+        /// <param name="number">The phone number to search for.</param>
+        /// <returns>The entry matching the supplied phone number, or, if no match can be found, <c>null</c>.</returns>
         public PhoneBookEntry LookupByNumber(String number)
         {
             // Perhaps we could search with more tolerance in the future
@@ -85,8 +101,10 @@ namespace DisGUISE.Phone
             // Maybe throw an exception here?
             return null;
         }
-
-        // Query the cache by name
+        
+        /// <summary>Query the cache by name.</summary>
+        /// <param name="name">The name to search for.</param>
+        /// <returns>The entry matching the supplied name, or, if no match can be found, <c>null</c>.</returns>
         public PhoneBookEntry LookupByName(String name)
         {
             foreach(PhoneBookEntry pbe in cache.Values) {
@@ -97,7 +115,7 @@ namespace DisGUISE.Phone
             return null;
         }
 
-        // Retrieve the phone book from the phone and package it into a hashtble
+        // Retrieve the phone book from the phone and package it into a hashtable
         private Hashtable GetBook()
         {
             String result = PhonePort.AddCommand(new ATCommand("AT+CPBR=1," + GetMaxIndex()));
