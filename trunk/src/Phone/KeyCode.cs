@@ -178,7 +178,9 @@ namespace DisGUISE.Phone
         {
             this._code = code;
             this._description = description;
-            keymap[code] = this;
+            lock (keymap) {
+                keymap[code] = this;
+            }
         }
         
         /// <summary>
@@ -192,13 +194,15 @@ namespace DisGUISE.Phone
         /// <returns>The <c>KeyCode</c> object belonging to the code string.</returns>
         public static KeyCode Lookup(String chars)
         {
-            if (keymap.ContainsKey(chars)) {
-                return (KeyCode) keymap[chars];    
-            } else {
-                // What shall we do? Something strange might be happening, or our
-                // list of possible keycodes is incomplete. We might either return a
-                // new, "custom" keycode, or we simply return null (Maybe throw an exception?)
-                return new KeyCode(chars, "Custom keycode, not defined in database");
+            lock (keymap) {
+               if (keymap.ContainsKey(chars)) {
+                   return (KeyCode) keymap[chars];    
+               } else {
+                   // What shall we do? Something strange might be happening, or our
+                   // list of possible keycodes is incomplete. We might either return a
+                   // new, "custom" keycode, or we simply return null (Maybe throw an exception?)
+                   return new KeyCode(chars, "Custom keycode, not defined in database");
+               }
             }
         }
     }
