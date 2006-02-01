@@ -46,10 +46,11 @@ namespace DisGUISE.Phone
             Match m = reKEY.Match(e.Line);
             if (m.Success) {
                 String key = m.Groups[1].Value;
+                KeyCode code = KeyCode.Lookup(key);
                 // press or release?
-                bool pressed = (int.Parse(m.Groups[2].Value) == 1);
+                KeyAction action = (int.Parse(m.Groups[2].Value) == 1) ? KeyAction.Pressed : KeyAction.Released;
                 if (OnKeyPress != null) {
-                    OnKeyPress(this, new KeyEventArgs(key, pressed));
+                    OnKeyPress(this, new KeyEventArgs(code, action));
                 }
             }
         }
@@ -59,11 +60,11 @@ namespace DisGUISE.Phone
     {
         public class KeyEventArgs:EventArgs
         {
-            private String _key;
-            private bool _pressed;
+            private KeyCode _key;
+            private KeyAction _action;
             
             /// <value>The code of the activated key.</value>
-            public String Key
+            public KeyCode Key
             {
                 get
                 {
@@ -72,17 +73,17 @@ namespace DisGUISE.Phone
             }
             
             /// <value>Indicates whether the key was pressed (or released)</value>
-            public bool Pressed
+            public KeyAction Action
             {
                 get
                 {
-                    return _pressed;
+                    return _action;
                 }
             }
-            public KeyEventArgs(String key, bool pressed):base()
+            public KeyEventArgs(KeyCode key, KeyAction action):base()
             {
                 this._key = key;
-                this._pressed = pressed;
+                this._action = action;
             }
         }
 
