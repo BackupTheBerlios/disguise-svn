@@ -33,9 +33,9 @@ namespace DisGUISE.SEWidgets
         {
             String r = PhonePort.AddCommand(new ATCommand("AT*" + this.cmdbase + "=\"" + this.name + prefix + "\"," + (int) this.category));
             // Console.WriteLine ("»» " + r + " ««");
-              this.id = ExtractID(r);
+            this.id = ExtractID(r);
             // port.addListener (this);
-              PhonePort.OnRawEvent += new RawEventHandler(this.ProcessRawLine);
+            PhonePort.OnRawEvent += new RawEventHandler(this.ProcessRawLine);
         }
 
         protected void ProcessRawLine(Object sender, RawEventArgs e)

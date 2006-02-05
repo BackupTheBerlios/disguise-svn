@@ -45,7 +45,6 @@ namespace DisGUISE.SEWidgets
         public SEWidget(IPhonePort port, String cmdbase):base(port, cmdbase)
         {
             autodestruct = true;
-
             port.OnRawEvent += new RawEventHandler(this.ProcessRawEvent);
         }
 
